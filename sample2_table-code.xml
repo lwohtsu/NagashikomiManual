@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><story xmlns:aid5="http://ns.adobe.com/AdobeInDesign/5.0/" xmlns:aid="http://ns.adobe.com/AdobeInDesign/4.0/"><body>
+<p>以下は通常の表のサンプルです。</p>
+<table>
+<tr>
+<td>ファイル・フォルダ名</td>
+<td>説明</td>
+</tr>
+<tr>
+<td>cssjs</td>
+<td>プレビュー用のCSSとJavaScriptファイルを入れておくフォルダ（P.■■参照）。</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>Markdown原稿を入れるフォルダだが、リネームしてもいいし、このフォルダ外に原稿を置いても問題ない。</td>
+</tr>
+<tr>
+<td>Gruntfile.js</td>
+<td>Gruntの設定ファイル。</td>
+</tr>
+<tr>
+<td>indesign-plugins</td>
+<td>InDesign用のプラグイン（P.■■参照）。インストール後は削除しても問題ない。</td>
+</tr>
+<tr>
+<td>kousei-sjis</td>
+<td>Just-Rightという校正ツールを使用するために、Shift JISに変換したHTMLファイルを保存しておくフォルダ。削除しても問題ない。</td>
+</tr>
+<tr>
+<td>mytemplate.html</td>
+<td>プレビュー用HTMLの元になるテンプレートファイル。CSSへのリンクなどを記述しておく（P.■■参照）。</td>
+</tr>
+<tr>
+<td>node_modules</td>
+<td>Gruntやプラグインがインストールされているフォルダ。</td>
+</tr>
+<tr>
+<td>README.html〜xml</td>
+<td>使用説明ファイル。削除しても問題ない。</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>テスト用のファイル。削除しても問題ない。</td>
+</tr>
+</table>
+<p>以下はソースコードのサンプルです。</p>
+<codelist>
+<pre><code><span_hljs-built_in>module</span_hljs-built_in>.exports = <span_hljs-keyword>function</span_hljs-keyword><span_hljs-params>(grunt)</span_hljs-params> {</code></pre>
+<pre><code>    grunt.initConfig({</code></pre>
+<pre><code>        markdown: {</code></pre>
+<pre><code>            all: {</code></pre>
+<pre><code>                files: [</code></pre>
+<pre><code>                    {</code></pre>
+<pre><code>                        expand: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>                        src: [<span_hljs-string>'**/*.md'</span_hljs-string>, <span_hljs-string>'!node_modules/**/*.md'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.md'</span_hljs-string>],</code></pre>
+<pre><code>                        ext: <span_hljs-string>'.html'</span_hljs-string></code></pre>
+<pre><code>                    }</code></pre>
+<pre><code>                ],</code></pre>
+<pre><code>                options: {</code></pre>
+<pre><code>                    template: <span_hljs-string>'mytemplate.html'</span_hljs-string>,</code></pre>
+<pre><code>                    postCompile: <span_hljs-keyword>function</span_hljs-keyword><span_hljs-params>(src, context)</span_hljs-params> {</code></pre>
+<pre><code>                        <span_hljs-keyword>return</span_hljs-keyword> src + <span_hljs-string>"&lt;script src='http://localhost:35732/livereload.js'&gt;&lt;/script&gt;\n"</span_hljs-string>;</code></pre>
+<pre><code>                    },</code></pre>
+<pre><code>                    markdownOptions: {</code></pre>
+<pre><code>                        gfm: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>                        highlight: <span_hljs-string>'manual'</span_hljs-string></code></pre>
+<pre><code>                    }</code></pre>
+<pre><code>                }</code></pre>
+<pre><code>            }</code></pre>
+<pre><code>        },</code></pre>
+<pre><code>        watch:{</code></pre>
+<pre><code>            md: {</code></pre>
+<pre><code>                files: [<span_hljs-string>'**/*.md'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.*'</span_hljs-string>],</code></pre>
+<pre><code>                tasks: [<span_hljs-string>'markdown'</span_hljs-string>],</code></pre>
+<pre><code>            },</code></pre>
+<pre><code>            html: {</code></pre>
+<pre><code>                files: [<span_hljs-string>'**/*.html'</span_hljs-string>, <span_hljs-string>'!kousei-sjis/**/*.html'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.html'</span_hljs-string>],</code></pre>
+<pre><code>                tasks: [ ],</code></pre>
+<pre><code>                options: {</code></pre>
+<pre><code>                    livereload: <span_hljs-number>35732</span_hljs-number></code></pre>
+<pre><code>                }</code></pre>
+<pre><code>            },</code></pre>
+<pre><code>        },</code></pre>
+<pre><code>        replace:{</code></pre>
+<pre><code>            example: {</code></pre>
+<pre><code>                expand: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>                src: [<span_hljs-string>'**/*.html'</span_hljs-string>, <span_hljs-string>'!node_modules/**/*.html'</span_hljs-string>, <span_hljs-string>'!kousei-sjis/**/*.html'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.html'</span_hljs-string>, <span_hljs-string>'!**/mytemplate.html'</span_hljs-string>],</code></pre>
+<pre><code>                dest: <span_hljs-string>'kousei-sjis/'</span_hljs-string>,</code></pre>
+<pre><code>                replacements: [{</code></pre>
+<pre><code>                    from:  <span_hljs-string>'&lt;meta charset="utf-8"&gt;'</span_hljs-string>,</code></pre>
+<pre><code>                    to: <span_hljs-string>'&lt;meta charset="sjis"&gt;'</span_hljs-string></code></pre>
+<pre><code>                },</code></pre>
+<pre><code>                {</code></pre>
+<pre><code>                    from: <span_hljs-regexp>/&lt;script.*&lt;\/script&gt;/g</span_hljs-regexp>, </code></pre>
+<pre><code>                    to:<span_hljs-string>'&lt;!----&gt;'</span_hljs-string></code></pre>
+<pre><code>                },</code></pre>
+<pre><code>                {</code></pre>
+<pre><code>                    from: <span_hljs-regexp>/&lt;link.*&gt;/g</span_hljs-regexp>, </code></pre>
+<pre><code>                    to:<span_hljs-string>'&lt;!----&gt;'</span_hljs-string></code></pre>
+<pre><code>                }</code></pre>
+<pre><code>                ]</code></pre>
+<pre><code>            }</code></pre>
+<pre><code>        },</code></pre>
+<pre><code>        utf8tosjis:{</code></pre>
+<pre><code>            dist:{</code></pre>
+<pre><code>                expand: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>                src: [<span_hljs-string>'kousei-sjis/**/*.html'</span_hljs-string>, <span_hljs-string>'!**/mytemplate.html'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.html'</span_hljs-string>],</code></pre>
+<pre><code>                overwrite: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>            }</code></pre>
+<pre><code>        },</code></pre>
+<pre><code>        html2indtag: {</code></pre>
+<pre><code>            dist: {</code></pre>
+<pre><code>                expand: <span_hljs-literal>true</span_hljs-literal>,</code></pre>
+<pre><code>                src: [<span_hljs-string>'**/*.html'</span_hljs-string>, <span_hljs-string>'!node_modules/**/*.html'</span_hljs-string>, <span_hljs-string>'!mytemplate.html'</span_hljs-string>, <span_hljs-string>'!kousei-sjis/**/*.html'</span_hljs-string>, <span_hljs-string>'!**/ignore/**/*.html'</span_hljs-string>],</code></pre>
+<pre><code>                ext: <span_hljs-string>'.xml'</span_hljs-string></code></pre>
+<pre><code>            },</code></pre>
+<pre><code>            options: {</code></pre>
+<pre><code>                <span_hljs-comment>//見出しが目立ちにくい場合は、trueにすると記号が入る</span_hljs-comment></code></pre>
+<pre><code>                midashialert: <span_hljs-literal>true</span_hljs-literal></code></pre>
+<pre><code>            }</code></pre>
+<pre><code>        }</code></pre>
+<pre><code>    });</code></pre>
+<pre><code></code></pre>
+<pre><code>    grunt.loadNpmTasks(<span_hljs-string>'grunt-utf8tosjis'</span_hljs-string>);</code></pre>
+<pre><code>    grunt.loadNpmTasks(<span_hljs-string>'grunt-markdown'</span_hljs-string>);</code></pre>
+<pre><code>    grunt.loadNpmTasks(<span_hljs-string>'grunt-contrib-watch'</span_hljs-string>);</code></pre>
+<pre><code>    grunt.loadNpmTasks(<span_hljs-string>'grunt-text-replace'</span_hljs-string>);</code></pre>
+<pre><code>    grunt.loadNpmTasks(<span_hljs-string>'grunt-html2indtag'</span_hljs-string>);</code></pre>
+<pre><code></code></pre>
+<pre><code>    grunt.registerTask(<span_hljs-string>"default"</span_hljs-string>, [<span_hljs-string>"markdown"</span_hljs-string>, <span_hljs-string>"html2indtag"</span_hljs-string>, <span_hljs-string>"watch"</span_hljs-string>]);</code></pre>
+<pre><code>    grunt.registerTask(<span_hljs-string>"kousei"</span_hljs-string>, [<span_hljs-string>"markdown"</span_hljs-string>, <span_hljs-string>"replace"</span_hljs-string>, <span_hljs-string>"utf8tosjis"</span_hljs-string><span_hljs-comment>/*, "watch"*/</span_hljs-comment>]);</code></pre>
+<pre><code>    grunt.registerTask(<span_hljs-string>"xml"</span_hljs-string>, [<span_hljs-string>"markdown"</span_hljs-string>, <span_hljs-string>"html2indtag"</span_hljs-string>]);</code></pre>
+<pre><code>};</code></pre>
+</codelist>
+<script src='http://localhost:35732/livereload.js'></script>
+</body>
+</story>

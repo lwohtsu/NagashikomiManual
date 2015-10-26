@@ -1,0 +1,150 @@
+<!DOCTYPE  html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>doc</title>
+	<script src="../cssjs/jquery-2.0.3.min.js"></script>
+	<script src="../cssjs/addimagename.js"></script>
+	<link rel="stylesheet" href="../cssjs/myrule.css"> 
+  <link rel="stylesheet" href="../cssjs/hljsstyles/xcode.css"> 
+  </head>
+  <body>  
+    <p>以下は通常の表のサンプルです。</p>
+<table>
+<thead>
+<tr>
+<th>ファイル・フォルダ名</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cssjs</td>
+<td>プレビュー用のCSSとJavaScriptファイルを入れておくフォルダ（P.■■参照）。</td>
+</tr>
+<tr>
+<td>doc</td>
+<td>Markdown原稿を入れるフォルダだが、リネームしてもいいし、このフォルダ外に原稿を置いても問題ない。</td>
+</tr>
+<tr>
+<td>Gruntfile.js</td>
+<td>Gruntの設定ファイル。</td>
+</tr>
+<tr>
+<td>indesign-plugins</td>
+<td>InDesign用のプラグイン（P.■■参照）。インストール後は削除しても問題ない。</td>
+</tr>
+<tr>
+<td>kousei-sjis</td>
+<td>Just-Rightという校正ツールを使用するために、Shift JISに変換したHTMLファイルを保存しておくフォルダ。削除しても問題ない。</td>
+</tr>
+<tr>
+<td>mytemplate.html</td>
+<td>プレビュー用HTMLの元になるテンプレートファイル。CSSへのリンクなどを記述しておく（P.■■参照）。</td>
+</tr>
+<tr>
+<td>node_modules</td>
+<td>Gruntやプラグインがインストールされているフォルダ。</td>
+</tr>
+<tr>
+<td>README.html〜xml</td>
+<td>使用説明ファイル。削除しても問題ない。</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>テスト用のファイル。削除しても問題ない。</td>
+</tr>
+</tbody>
+</table>
+<p>以下はソースコードのサンプルです。</p>
+<pre><code class="lang-javascript"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(grunt)</span> </span>{
+    grunt.initConfig({
+        markdown: {
+            all: {
+                files: [
+                    {
+                        expand: <span class="hljs-literal">true</span>,
+                        src: [<span class="hljs-string">'**/*.md'</span>, <span class="hljs-string">'!node_modules/**/*.md'</span>, <span class="hljs-string">'!**/ignore/**/*.md'</span>],
+                        ext: <span class="hljs-string">'.html'</span>
+                    }
+                ],
+                options: {
+                    template: <span class="hljs-string">'mytemplate.html'</span>,
+                    postCompile: <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(src, context)</span> </span>{
+                        <span class="hljs-keyword">return</span> src + <span class="hljs-string">"&lt;script src='http://localhost:35732/livereload.js'&gt;&lt;/script&gt;\n"</span>;
+                    },
+                    markdownOptions: {
+                        gfm: <span class="hljs-literal">true</span>,
+                        highlight: <span class="hljs-string">'manual'</span>
+                    }
+                }
+            }
+        },
+        watch:{
+            md: {
+                files: [<span class="hljs-string">'**/*.md'</span>, <span class="hljs-string">'!**/ignore/**/*.*'</span>],
+                tasks: [<span class="hljs-string">'markdown'</span>],
+            },
+            html: {
+                files: [<span class="hljs-string">'**/*.html'</span>, <span class="hljs-string">'!kousei-sjis/**/*.html'</span>, <span class="hljs-string">'!**/ignore/**/*.html'</span>],
+                tasks: [ ],
+                options: {
+                    livereload: <span class="hljs-number">35732</span>
+                }
+            },
+        },
+        replace:{
+            example: {
+                expand: <span class="hljs-literal">true</span>,
+                src: [<span class="hljs-string">'**/*.html'</span>, <span class="hljs-string">'!node_modules/**/*.html'</span>, <span class="hljs-string">'!kousei-sjis/**/*.html'</span>, <span class="hljs-string">'!**/ignore/**/*.html'</span>, <span class="hljs-string">'!**/mytemplate.html'</span>],
+                dest: <span class="hljs-string">'kousei-sjis/'</span>,
+                replacements: [{
+                    from:  <span class="hljs-string">'&lt;meta charset="utf-8"&gt;'</span>,
+                    to: <span class="hljs-string">'&lt;meta charset="sjis"&gt;'</span>
+                },
+                {
+                    from: <span class="hljs-regexp">/&lt;script.*&lt;\/script&gt;/g</span>, 
+                    to:<span class="hljs-string">'&lt;!----&gt;'</span>
+                },
+                {
+                    from: <span class="hljs-regexp">/&lt;link.*&gt;/g</span>, 
+                    to:<span class="hljs-string">'&lt;!----&gt;'</span>
+                }
+                ]
+            }
+        },
+        utf8tosjis:{
+            dist:{
+                expand: <span class="hljs-literal">true</span>,
+                src: [<span class="hljs-string">'kousei-sjis/**/*.html'</span>, <span class="hljs-string">'!**/mytemplate.html'</span>, <span class="hljs-string">'!**/ignore/**/*.html'</span>],
+                overwrite: <span class="hljs-literal">true</span>,
+            }
+        },
+        html2indtag: {
+            dist: {
+                expand: <span class="hljs-literal">true</span>,
+                src: [<span class="hljs-string">'**/*.html'</span>, <span class="hljs-string">'!node_modules/**/*.html'</span>, <span class="hljs-string">'!mytemplate.html'</span>, <span class="hljs-string">'!kousei-sjis/**/*.html'</span>, <span class="hljs-string">'!**/ignore/**/*.html'</span>],
+                ext: <span class="hljs-string">'.xml'</span>
+            },
+            options: {
+                <span class="hljs-comment">//見出しが目立ちにくい場合は、trueにすると記号が入る</span>
+                midashialert: <span class="hljs-literal">true</span>
+            }
+        }
+    });
+
+    grunt.loadNpmTasks(<span class="hljs-string">'grunt-utf8tosjis'</span>);
+    grunt.loadNpmTasks(<span class="hljs-string">'grunt-markdown'</span>);
+    grunt.loadNpmTasks(<span class="hljs-string">'grunt-contrib-watch'</span>);
+    grunt.loadNpmTasks(<span class="hljs-string">'grunt-text-replace'</span>);
+    grunt.loadNpmTasks(<span class="hljs-string">'grunt-html2indtag'</span>);
+
+    grunt.registerTask(<span class="hljs-string">"default"</span>, [<span class="hljs-string">"markdown"</span>, <span class="hljs-string">"html2indtag"</span>, <span class="hljs-string">"watch"</span>]);
+    grunt.registerTask(<span class="hljs-string">"kousei"</span>, [<span class="hljs-string">"markdown"</span>, <span class="hljs-string">"replace"</span>, <span class="hljs-string">"utf8tosjis"</span><span class="hljs-comment">/*, "watch"*/</span>]);
+    grunt.registerTask(<span class="hljs-string">"xml"</span>, [<span class="hljs-string">"markdown"</span>, <span class="hljs-string">"html2indtag"</span>]);
+};</code></pre>
+<script src='http://localhost:35732/livereload.js'></script>
+
+  </body>
+</html>
